@@ -13,7 +13,7 @@ public class MainController {
     //Attribute
 
     //Referenzen
-    private Graph allUsers;
+    private final Graph allUsers;
 
     public MainController(){
         allUsers = new Graph();
@@ -34,12 +34,13 @@ public class MainController {
 
     /**
      * Fügt einen Nutzer hinzu, falls dieser noch nicht existiert.
+     *
      * @param name
      * @return true, falls ein neuer Nutzer hinzugefügt wurde, sonst false.
      */
     public boolean insertUser(String name){
         //TODO 05: Nutzer dem sozialen Netzwerk hinzufügen.
-        if(allUsers.getVertex(name) != null){
+        if (allUsers.getVertex(name) != null){
             allUsers.addVertex(new Vertex(name));
             return true;
         }
@@ -48,16 +49,34 @@ public class MainController {
 
     /**
      * Löscht einen Nutzer, falls dieser existiert. Alle Verbindungen zu anderen Nutzern werden ebenfalls gelöscht.
+     *
      * @param name
      * @return true, falls ein Nutzer gelöscht wurde, sonst false.
      */
     public boolean deleteUser(String name){
         //TODO 07: Nutzer aus dem sozialen Netzwerk entfernen.
-        return false;
+        boolean bool = false;
+        List<Vertex> tmpVertices = allUsers.getVertices();
+        tmpVertices.toFirst();
+        while (tmpVertices.hasAccess()) {
+            if (tmpVertices.getContent().getID().equals(name)){
+                allUsers.removeVertex(tmpVertices.getContent());
+                bool = true;
+            }
+        }
+        List<Edge> tmpEdges = allUsers.getEdges();
+        tmpEdges.toFirst();
+        while (tmpEdges.hasAccess()) {
+            if (tmpEdges.getContent().getVertices()[ 0 ].getID().equals(name) || tmpEdges.getContent().getVertices()[ 1 ].getID().equals(name)){
+                allUsers.removeEdge(tmpEdges.getContent());
+            }
+        }
+        return bool;
     }
 
     /**
      * Falls Nutzer vorhanden sind, so werden ihre Namen in einem String-Array gespeichert und zurückgegeben. Ansonsten wird null zurückgegeben.
+     *
      * @return
      */
     public String[] getAllUsers(){
@@ -65,13 +84,14 @@ public class MainController {
         List<Vertex> tmp = allUsers.getVertices();
         tmp.toFirst();
         int count = 0;
-        while(tmp.hasAccess()){
+        while (tmp.hasAccess()) {
+            count++;
             tmp.next();
         }
-        String[] res = new String[count];
+        String[] res = new String[ count ];
         tmp.toFirst();
-        for(int i = 0; i < count; i ++){
-            res[i] = tmp.getContent().getID();
+        for (int i = 0; i < count; i++) {
+            res[ i ] = tmp.getContent().getID();
             tmp.next();
         }
         return res;
@@ -79,6 +99,7 @@ public class MainController {
 
     /**
      * Falls der Nutzer vorhanden ist und Freunde hat, so werden deren Namen in einem String-Array gespeichert und zurückgegeben. Ansonsten wird null zurückgegeben.
+     *
      * @param name
      * @return
      */
@@ -91,6 +112,7 @@ public class MainController {
      * Bestimmt den Zentralitätsgrad einer Person im sozialen Netzwerk, falls sie vorhanden ist. Sonst wird -1.0 zurückgegeben.
      * Der Zentralitätsgrad ist der Quotient aus der Anzahl der Freunde der Person und der um die Person selbst verminderten Anzahl an Nutzern im Netzwerk.
      * Gibt also den Prozentwert an Personen im sozialen Netzwerk an, mit der die Person befreundet ist.
+     *
      * @param name
      * @return
      */
@@ -101,17 +123,41 @@ public class MainController {
 
     /**
      * Zwei Nutzer des Netzwerkes gehen eine Freundschaft neu ein, falls sie sich im Netzwerk befinden und noch keine Freunde sind.
+     *
      * @param name01
      * @param name02
      * @return true, falls eine neue Freundeschaft entstanden ist, ansonsten false.
      */
     public boolean befriend(String name01, String name02){
         //TODO 08: Freundschaften schließen.
+        List<Edge> tmpEdges = allUsers.getEdges();
+        tmpEdges.toFirst();
+        while (tmpEdges.hasAccess()) {
+            if (( tmpEdges.getContent().getVertices()[ 0 ].getID().equals(name01) && tmpEdges.getContent().getVertices()[ 1 ].getID().equals(name02) ) ||
+                    ( tmpEdges.getContent().getVertices()[ 0 ].getID().equals(name02) && tmpEdges.getContent().getVertices()[ 1 ].getID().equals(name01) )){
+                List<Vertex> tmpVertices = allUsers.getVertices();
+                tmpVertices.toFirst();
+                Vertex tmp1 = null, tmp2 = null;
+                while (tmpVertices.hasAccess()) {
+                    if (tmpVertices.getContent().getID().equals(name01)){
+                        tmp1 = tmpVertices.getContent();
+                    } else if (tmpVertices.getContent().getID().equals(name02)){
+                        tmp2 = tmpVertices.getContent();
+                    }
+                }
+                if (tmp1 != null && tmp2 != null){
+                    allUsers.addEdge(new Edge(tmp1, tmp2, 1));  //WAS F{R WEIGHT????????
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 
     /**
      * Zwei Nutzer beenden ihre Freundschaft, falls sie sich im Netzwerk befinden und sie befreundet sind.
+     *
      * @param name01
      * @param name02
      * @return true, falls ihre Freundschaft beendet wurde, ansonsten false.
@@ -124,6 +170,7 @@ public class MainController {
     /**
      * Bestimmt die Dichte des sozialen Netzwerks und gibt diese zurück.
      * Die Dichte ist der Quotient aus der Anzahl aller vorhandenen Freundschaftsbeziehungen und der Anzahl der maximal möglichen Freundschaftsbeziehungen.
+     *
      * @return
      */
     public double dense(){
@@ -134,6 +181,7 @@ public class MainController {
     /**
      * Gibt die möglichen Verbindungen zwischen zwei Personen im sozialen Netzwerk als String-Array zurück,
      * falls die Personen vorhanden sind und sie über eine oder mehrere Ecken miteinander verbunden sind.
+     *
      * @param name01
      * @param name02
      * @return
@@ -141,7 +189,7 @@ public class MainController {
     public String[] getLinksBetween(String name01, String name02){
         Vertex user01 = allUsers.getVertex(name01);
         Vertex user02 = allUsers.getVertex(name02);
-        if(user01 != null && user02 != null){
+        if (user01 != null && user02 != null){
             //TODO 13: Schreibe einen Algorithmus, der mindestens eine Verbindung von einem Nutzer über Zwischennutzer zu einem anderem Nutzer bestimmt. Happy Kopfzerbrechen!
         }
         return null;
