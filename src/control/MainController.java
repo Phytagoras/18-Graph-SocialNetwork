@@ -167,6 +167,11 @@ public class MainController{
      */
     public boolean unfriend(String name01, String name02){
         //TODO 11: Freundschaften beenden.
+        Edge tmp = allUsers.getEdge(allUsers.getVertex(name01), allUsers.getVertex(name02));
+        if(tmp != null){
+            allUsers.removeEdge(tmp);
+            return true;
+        }
         return false;
     }
 
@@ -178,7 +183,22 @@ public class MainController{
      */
     public double dense(){
         //TODO 12: Dichte berechnen.
-        return 0.12334455676;
+        //Kleiner Gauss: (n^2 + n)/2
+        List<Vertex> tmpVertices = allUsers.getVertices();
+        List<Edge> tmpEdges = allUsers.getEdges();
+        double trouble = -1;
+        double kill = 0;
+        tmpVertices.toFirst();
+        while(tmpVertices.hasAccess()){
+            trouble++;
+            tmpVertices.next();
+        }
+        tmpEdges.toFirst();
+        while(tmpEdges.hasAccess()){
+            kill++;
+            tmpEdges.next();
+        }
+        return (trouble>0)?kill/(((trouble*trouble)+trouble)/2):0;
     }
 
     /**
