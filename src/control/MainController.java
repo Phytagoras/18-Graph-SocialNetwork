@@ -24,7 +24,7 @@ public class MainController{
      * Fügt Personen dem sozialen Netzwerk hinzu.
      */
     private void createSomeUsers(){
-        insertUser("Ulf");
+/*        insertUser("Ulf");
         insertUser("Silent Bob");
         insertUser("Dörte");
         insertUser("Ralle");
@@ -36,16 +36,38 @@ public class MainController{
         insertUser("Niklas1");
         insertUser("Niklas2");
         insertUser("Herr Ambrosius");
+        insertUser("1");
+        insertUser("2");
         befriend("Herr Ambrosius", "Erik");
+        befriend("Herr Ambrosius", "1");
         befriend("Erik", "Leyla");
         befriend("Erik", "Simon");
         befriend("Simon", "Robin");
         befriend("Leyla", "Niklas1");
         befriend("Niklas1", "Max");
         befriend("Robin", "Max");
+        befriend("2", "Max");
         befriend("Max", "Niklas2");
         befriend("Silent Bob", "Ralle");
-        befriend("Dörte", "Ralle");
+        befriend("Dörte", "Ralle");*/
+        insertUser("alex");
+        insertUser("yoda");
+        insertUser("pia");
+        insertUser("alf");
+        insertUser("chuck");
+        insertUser("frank");
+        insertUser("uwe");
+        insertUser("jan");
+        befriend("alex", "pia");
+        befriend("pia", "yoda");
+        befriend("pia", "chuck");
+        befriend("pia", "alf");
+        befriend("alf", "chuck");
+        befriend("chuck", "uwe");
+        befriend("chuck", "frank");
+        befriend("frank", "uwe");
+        befriend("uwe", "jan");
+        befriend("frank", "jan");
     }
 
     /**
@@ -257,6 +279,7 @@ public class MainController{
                     allPathsArray[i][j] = new String(allPaths.getContent().getContent().getID());
                     allPaths.getContent().next();
                 }
+                allPaths.next();
             }
             return allPathsArray;
         }
@@ -290,6 +313,40 @@ public class MainController{
             neighbors.next();
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Gibt zurück, ob es sich bei allUsers um einen zusammenhängenden Graphen handelt, also kein Knoten ohne Nachbarn ist.
