@@ -28,6 +28,22 @@ public class MainController{
         insertUser("Silent Bob");
         insertUser("Dörte");
         insertUser("Ralle");
+        insertUser("Erik");
+        insertUser("Simon");
+        insertUser("Leyla");
+        insertUser("Max");
+        insertUser("Robin");
+        insertUser("Niklas1");
+        insertUser("Niklas2");
+        insertUser("Herr Ambrosius");
+        befriend("Herr Ambrosius", "Erik");
+        befriend("Erik", "Leyla");
+        befriend("Erik", "Simon");
+        befriend("Simon", "Robin");
+        befriend("Leyla", "Niklas1");
+        befriend("Niklas1", "Max");
+        befriend("Robin", "Max");
+        befriend("Max", "Niklas2");
         befriend("Silent Bob", "Ralle");
         befriend("Dörte", "Ralle");
     }
@@ -209,13 +225,70 @@ public class MainController{
      * @param name02
      * @return
      */
-    public String[] getLinksBetween(String name01, String name02){
+    public String[][] getLinksBetween(String name01, String name02){
         Vertex user01 = allUsers.getVertex(name01);
         Vertex user02 = allUsers.getVertex(name02);
         if(user01 != null && user02 != null){
             //TODO 13: Schreibe einen Algorithmus, der mindestens eine Verbindung von einem Nutzer über Zwischennutzer zu einem anderem Nutzer bestimmt. Happy Kopfzerbrechen!
+            List<Vertex> temporaryPath = new List<>();
+            List<List<Vertex>> allPaths = new List<>();
+            temporaryPath.append(user01);
+            user01.setMark(true);
+            searchForConnections(user01, user02, temporaryPath, allPaths);
+            if(allPaths.isEmpty()) return null;
+            allPaths.toFirst();
+            int length = 0;
+            while(allPaths.hasAccess()){
+                length++;
+                allPaths.next();
+            }
+            allPaths.toFirst();
+            String[][] allPathsArray = new String[length][];
+            for(int i = 0; i < allPathsArray.length; i++){
+                allPaths.getContent().toFirst();
+                int len = 0;
+                while(allPaths.getContent().hasAccess()){
+                    len ++;
+                    allPaths.getContent().next();
+                }
+                allPathsArray[i] = new String[len];
+                allPaths.getContent().toFirst();
+                for(int j = 0; j < allPathsArray[i].length; j++){
+                    allPathsArray[i][j] = new String(allPaths.getContent().getContent().getID());
+                    allPaths.getContent().next();
+                }
+            }
+            return allPathsArray;
         }
         return null;
+    }
+
+    private void searchForConnections(Vertex start, Vertex wantedUser, List<Vertex> temporaryPath, List<List<Vertex>> allPaths){
+        if(start == wantedUser){
+            List<Vertex> tmpPath = new List<>();
+            temporaryPath.toFirst();
+            while(temporaryPath.hasAccess()){
+                tmpPath.append(temporaryPath.getContent());
+                System.out.println(temporaryPath.getContent().getID());
+                temporaryPath.next();
+            }
+            allPaths.append(tmpPath);
+            return;
+        }
+        List<Vertex> neighbors = allUsers.getNeighbours(start);
+        neighbors.toFirst();
+        while(neighbors.hasAccess()){
+            Vertex tmp = neighbors.getContent();
+            if(!tmp.isMarked()){
+                tmp.setMark(true);
+                temporaryPath.append(tmp);
+                searchForConnections(tmp, wantedUser, temporaryPath, allPaths);
+                temporaryPath.toLast();
+                temporaryPath.remove();
+                tmp.setMark(false);
+            }
+            neighbors.next();
+        }
     }
 
     /**
