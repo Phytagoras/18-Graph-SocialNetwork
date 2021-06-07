@@ -8,14 +8,14 @@ import model.Vertex;
 /**
  * Created by Jean-Pierre on 12.01.2017.
  */
-public class MainController{
+public class MainController {
 
     //Attribute
 
     //Referenzen
     private final Graph allUsers;
 
-    public MainController(){
+    public MainController() {
         allUsers = new Graph();
         createSomeUsers();
     }
@@ -23,7 +23,7 @@ public class MainController{
     /**
      * Fügt Personen dem sozialen Netzwerk hinzu.
      */
-    private void createSomeUsers(){
+    private void createSomeUsers() {
 /*        insertUser("Ulf");
         insertUser("Silent Bob");
         insertUser("Dörte");
@@ -55,19 +55,19 @@ public class MainController{
         insertUser("pia");
         insertUser("alf");
         insertUser("chuck");
-        insertUser("frank");
+        insertUser("ute");
         insertUser("uwe");
         insertUser("jan");
         befriend("alex", "pia");
         befriend("pia", "yoda");
-        befriend("pia", "chuck");
-        befriend("pia", "alf");
-        befriend("alf", "chuck");
-        befriend("chuck", "uwe");
-        befriend("chuck", "frank");
-        befriend("frank", "uwe");
-        befriend("uwe", "jan");
-        befriend("frank", "jan");
+        befriend("pia", "jan");
+        befriend("pia", "ute");
+        befriend("ute", "jan");
+        befriend("jan", "chuck");
+        befriend("jan", "uwe");
+        befriend("chuck", "alf");
+        befriend("uwe", "alf");
+        befriend("uwe", "chuck");
     }
 
     /**
@@ -76,9 +76,9 @@ public class MainController{
      * @param name
      * @return true, falls ein neuer Nutzer hinzugefügt wurde, sonst false.
      */
-    public boolean insertUser(String name){
+    public boolean insertUser(String name) {
         //TODO 05: Nutzer dem sozialen Netzwerk hinzufügen.
-        if(allUsers.getVertex(name) == null){
+        if (allUsers.getVertex(name) == null) {
             allUsers.addVertex(new Vertex(name));
             return true;
         }
@@ -91,10 +91,10 @@ public class MainController{
      * @param name
      * @return true, falls ein Nutzer gelöscht wurde, sonst false.
      */
-    public boolean deleteUser(String name){
+    public boolean deleteUser(String name) {
         //TODO 07: Nutzer aus dem sozialen Netzwerk entfernen.
         Vertex vertex = allUsers.getVertex(name);
-        if(vertex != null){
+        if (vertex != null) {
             allUsers.removeVertex(vertex);
             return true;
         }
@@ -106,20 +106,20 @@ public class MainController{
      *
      * @return
      */
-    public String[] getAllUsers(){
+    public String[] getAllUsers() {
         //TODO 06: String-Array mit allen Nutzernamen erstellen.
-        if(!allUsers.isEmpty()){
+        if (!allUsers.isEmpty()) {
             List<Vertex> l = allUsers.getVertices();
             int x = 0;
             l.toFirst();
-            while(l.hasAccess()){
+            while (l.hasAccess()) {
                 x++;
                 l.next();
             }
 
             String[] s = new String[x];
             l.toFirst();
-            for(int i = 0; i < x; i++){
+            for (int i = 0; i < x; i++) {
                 s[i] = l.getContent().getID();
                 l.next();
             }
@@ -134,22 +134,22 @@ public class MainController{
      * @param name
      * @return
      */
-    public String[] getAllFriendsFromUser(String name){
+    public String[] getAllFriendsFromUser(String name) {
         //TODO 09: Freundesliste eines Nutzers als String-Array erstellen.
-        if(allUsers.getVertex(name) != null){
+        if (allUsers.getVertex(name) != null) {
             Vertex user = allUsers.getVertex(name);
             List<Vertex> l = allUsers.getNeighbours(user);
 
             int a = 0;
             l.toFirst();
-            while(l.hasAccess()){
+            while (l.hasAccess()) {
                 a++;
                 l.next();
             }
 
             String[] s = new String[a];
             l.toFirst();
-            for(int i = 0; i < a; i++, l.next()){
+            for (int i = 0; i < a; i++, l.next()) {
                 s[i] = l.getContent().getID();
             }
             return s;
@@ -166,12 +166,12 @@ public class MainController{
      * @param name
      * @return
      */
-    public double centralityDegreeOfUser(String name){
+    public double centralityDegreeOfUser(String name) {
         //TODO 10: Prozentsatz der vorhandenen Freundschaften eines Nutzers von allen möglichen Freundschaften des Nutzers.
-        if(allUsers.getVertex(name) != null){
+        if (allUsers.getVertex(name) != null) {
             double finity = getAllFriendsFromUser(name).length;
             double amountOfUsers = getAllUsers().length - 1;
-            if(amountOfUsers != 0){
+            if (amountOfUsers != 0) {
                 return finity / amountOfUsers;
             }
             return 0;
@@ -186,9 +186,9 @@ public class MainController{
      * @param name02
      * @return true, falls eine neue Freundeschaft entstanden ist, ansonsten false.
      */
-    public boolean befriend(String name01, String name02){
+    public boolean befriend(String name01, String name02) {
         //TODO 08: Freundschaften schließen.
-        if(allUsers.getEdge(allUsers.getVertex(name01), allUsers.getVertex(name02)) == null){
+        if (allUsers.getEdge(allUsers.getVertex(name01), allUsers.getVertex(name02)) == null) {
             allUsers.addEdge(new Edge(allUsers.getVertex(name01), allUsers.getVertex(name02), 1));
             return true;
         }
@@ -203,10 +203,10 @@ public class MainController{
      * @param name02
      * @return true, falls ihre Freundschaft beendet wurde, ansonsten false.
      */
-    public boolean unfriend(String name01, String name02){
+    public boolean unfriend(String name01, String name02) {
         //TODO 11: Freundschaften beenden.
         Edge tmp = allUsers.getEdge(allUsers.getVertex(name01), allUsers.getVertex(name02));
-        if(tmp != null){
+        if (tmp != null) {
             allUsers.removeEdge(tmp);
             return true;
         }
@@ -219,7 +219,7 @@ public class MainController{
      *
      * @return
      */
-    public double dense(){
+    public double dense() {
         //TODO 12: Dichte berechnen.
         //Kleiner Gauss: (n^2 + n)/2
         List<Vertex> tmpVertices = allUsers.getVertices();
@@ -227,16 +227,16 @@ public class MainController{
         double trouble = -1;
         double kill = 0;
         tmpVertices.toFirst();
-        while(tmpVertices.hasAccess()){
+        while (tmpVertices.hasAccess()) {
             trouble++;
             tmpVertices.next();
         }
         tmpEdges.toFirst();
-        while(tmpEdges.hasAccess()){
+        while (tmpEdges.hasAccess()) {
             kill++;
             tmpEdges.next();
         }
-        return (trouble>0)?kill/(((trouble*trouble)+trouble)/2):0;
+        return (trouble > 0) ? kill / (((trouble * trouble) + trouble) / 2) : 0;
     }
 
     /**
@@ -247,36 +247,43 @@ public class MainController{
      * @param name02
      * @return
      */
-    public String[][] getLinksBetween(String name01, String name02){
+    public String[][] getLinksBetween(String name01, String name02) {
         Vertex user01 = allUsers.getVertex(name01);
         Vertex user02 = allUsers.getVertex(name02);
-        if(user01 != null && user02 != null){
+        if (user01 != null && user02 != null) {
             //TODO 13: Schreibe einen Algorithmus, der mindestens eine Verbindung von einem Nutzer über Zwischennutzer zu einem anderem Nutzer bestimmt. Happy Kopfzerbrechen!
+            //
+            //<start>
+            //
             List<Vertex> temporaryPath = new List<>();
             List<List<Vertex>> allPaths = new List<>();
+            allUsers.setAllVertexMarks(false);
             temporaryPath.append(user01);
             user01.setMark(true);
             searchForConnections(user01, user02, temporaryPath, allPaths);
-            if(allPaths.isEmpty()) return null;
+            user01.setMark(false);
+            //
+            //--Nur noch die Ausgabe--
+            if (allPaths.isEmpty()) return null;
             allPaths.toFirst();
             int length = 0;
-            while(allPaths.hasAccess()){
+            while (allPaths.hasAccess()) {
                 length++;
                 allPaths.next();
             }
             allPaths.toFirst();
             String[][] allPathsArray = new String[length][];
-            for(int i = 0; i < allPathsArray.length; i++){
+            for (int i = 0; i < allPathsArray.length; i++) {
                 allPaths.getContent().toFirst();
                 int len = 0;
-                while(allPaths.getContent().hasAccess()){
-                    len ++;
+                while (allPaths.getContent().hasAccess()) {
+                    len++;
                     allPaths.getContent().next();
                 }
                 allPathsArray[i] = new String[len];
                 allPaths.getContent().toFirst();
-                for(int j = 0; j < allPathsArray[i].length; j++){
-                    allPathsArray[i][j] = new String(allPaths.getContent().getContent().getID());
+                for (int j = 0; j < allPathsArray[i].length; j++) {
+                    allPathsArray[i][j] = allPaths.getContent().getContent().getID();
                     allPaths.getContent().next();
                 }
                 allPaths.next();
@@ -286,11 +293,11 @@ public class MainController{
         return null;
     }
 
-    private void searchForConnections(Vertex start, Vertex wantedUser, List<Vertex> temporaryPath, List<List<Vertex>> allPaths){
-        if(start == wantedUser){
+    private void searchForConnections(Vertex start, Vertex wantedUser, List<Vertex> temporaryPath, List<List<Vertex>> allPaths) {
+        if (start == wantedUser) {
             List<Vertex> tmpPath = new List<>();
             temporaryPath.toFirst();
-            while(temporaryPath.hasAccess()){
+            while (temporaryPath.hasAccess()) {
                 tmpPath.append(temporaryPath.getContent());
                 System.out.println(temporaryPath.getContent().getID());
                 temporaryPath.next();
@@ -300,9 +307,9 @@ public class MainController{
         }
         List<Vertex> neighbors = allUsers.getNeighbours(start);
         neighbors.toFirst();
-        while(neighbors.hasAccess()){
+        while (neighbors.hasAccess()) {
             Vertex tmp = neighbors.getContent();
-            if(!tmp.isMarked()){
+            if (!tmp.isMarked()) {
                 tmp.setMark(true);
                 temporaryPath.append(tmp);
                 searchForConnections(tmp, wantedUser, temporaryPath, allPaths);
@@ -315,44 +322,12 @@ public class MainController{
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * Gibt zurück, ob es sich bei allUsers um einen zusammenhängenden Graphen handelt, also kein Knoten ohne Nachbarn ist.
+     *
      * @return true, falls zusammenhängend, sonst false.
      */
-    public boolean testIfConnectedEasy(){
+    public boolean testIfConnectedEasy() {
         //TODO 14: Schreibe einen Algorithmus, der explizit den von uns benutzten Aufbau der Datenstruktur Graph und ihre angebotenen Methoden so ausnutzt, dass schnell (!) iterativ geprüft werden kann, ob der Graph allUsers zusammenhängend ist. Dies lässt sich mit einer einzigen Schleife prüfen.
         return false;
     }
@@ -360,9 +335,10 @@ public class MainController{
     /**
      * Gibt zurück, ob vom ersten Knoten in der Liste aller Knoten ausgehend alle anderen Knoten erreicht, also markiert werden können.
      * Nach der Prüfung werden noch vor der Rückgabe alle Knoten demarkiert.
+     *
      * @return true, falls alle Knoten vom ersten ausgehend markiert wurden, sonst false.
      */
-    public boolean testIfConnectedTough(){
+    public boolean testIfConnectedTough() {
         //TODO 15: Schreibe einen Algorithmus, der ausgehend vom ersten Knoten in der Liste aller Knoten versucht, alle anderen Knoten über Kanten zu erreichen und zu markieren.
         return false;
     }
