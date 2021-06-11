@@ -68,6 +68,10 @@ public class MainController{
         befriend("chuck", "alf");
         befriend("uwe", "alf");
         befriend("uwe", "chuck");
+        String[] arr = getCluster("uwe");
+        for(String str : arr){
+            System.out.println(str + "\n");
+        }
     }
 
     /**
@@ -340,6 +344,67 @@ public class MainController{
      */
     public boolean testIfConnectedTough(){
         //TODO 15: Schreibe einen Algorithmus, der ausgehend vom ersten Knoten in der Liste aller Knoten versucht, alle anderen Knoten über Kanten zu erreichen und zu markieren.
-        return false;
+        List<Vertex> users = allUsers.getVertices();
+        users.toFirst();
+        testToughRec(users.getContent());
+        if(allUsers.allVerticesMarked()){
+            allUsers.setAllVertexMarks(false);
+            return true;
+        } else{
+            allUsers.setAllVertexMarks(false);
+            return false;
+        }
     }
+
+    private void testToughRec(Vertex v){
+        if(!v.isMarked()){
+            v.setMark(true);
+            List<Vertex> neighbors = allUsers.getNeighbours(v);
+            neighbors.toFirst();
+            while(neighbors.hasAccess()){
+                testToughRec(neighbors.getContent());
+                neighbors.next();
+            }
+        }
+    }
+
+    public String[] getCluster(String startPoint){
+        List<Vertex> clusterVert = new List<>();
+        if(allUsers.getVertex(startPoint) != null){
+            allUsers.setAllVertexMarks(false);
+            getClusterPartRec(allUsers.getVertex(startPoint));
+            List<Vertex> allVertices = allUsers.getVertices();
+            allVertices.toFirst();
+            int count = 0;
+            while(allVertices.hasAccess()){
+                if(allVertices.getContent().isMarked()){
+                    clusterVert.append(allVertices.getContent());
+                    count++;
+                }
+                allVertices.next();
+            }
+            clusterVert.toFirst();
+            String[] arrOut = new String[count];
+            for(int i = 0; i < count; i++){
+                arrOut[i] = clusterVert.getContent().getID();
+                clusterVert.next();
+            }
+            return arrOut;
+
+        }
+        return null;
+    }
+
+    private void getClusterPartRec(Vertex startPoint){
+        startPoint.setMark(true);
+        List<Vertex> neighboursTmp = allUsers.getNeighbours(startPoint);
+        neighboursTmp.toFirst();
+        while(neighboursTmp.hasAccess()){
+            if(!neighboursTmp.getContent().isMarked()){
+                getClusterPartRec(neighboursTmp.getContent());
+            }
+            neighboursTmp.next();
+        }
+    }
+
 }

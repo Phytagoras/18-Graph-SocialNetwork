@@ -26,6 +26,7 @@ public class InteractionPanelHandler {
     private JButton deleteButton;
     private JPanel panel;
     private JTextArea systemOutput;
+    private JButton getClusterButton;
 
     private MainController mainController;
 
@@ -82,6 +83,21 @@ public class InteractionPanelHandler {
                     }
                 }else{
                     addToSysoutput("Sie müssen eine Person im Netzwerk und einen Freund angeben.");
+                }
+            }
+        });
+        getClusterButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(!personInSN.getText().isEmpty()){
+                    String person = personInSN.getText();
+                    String[] arr = mainController.getCluster(person);
+                    addToSysoutput("Cluster start://");
+                    for(String str : arr){
+                        addToSysoutput(str);
+                    }
+                    addToSysoutput("//:Cluster end");
+
                 }
             }
         });
