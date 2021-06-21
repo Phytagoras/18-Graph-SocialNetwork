@@ -50,7 +50,7 @@ public class MainController{
         befriend("Max", "Niklas2");
         befriend("Silent Bob", "Ralle");
         befriend("Dörte", "Ralle");*/
-        insertUser("alex");
+        /*insertUser("alex");
         insertUser("yoda");
         insertUser("pia");
         insertUser("alf");
@@ -71,7 +71,22 @@ public class MainController{
         String[] arr = getCluster("uwe");
         for(String str : arr){
             System.out.println(str + "\n");
-        }
+        }*/
+        insertUser("s");
+        insertUser("a");
+        insertUser("c");
+        insertUser("z");
+        insertUser("b");
+        insertUser("d");
+        befriend("s", "a");
+        befriend("s", "b");
+        befriend("a", "c");
+        befriend("a", "b");
+        befriend("a", "d");
+        befriend("b", "d");
+        befriend("c", "d");
+        befriend("c", "z");
+        befriend("d", "z");
     }
 
     /**
