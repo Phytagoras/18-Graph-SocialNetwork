@@ -24,7 +24,7 @@ public class MainController{
      * Fügt Personen dem sozialen Netzwerk hinzu.
      */
     private void createSomeUsers(){
-/*        insertUser("Ulf");
+        insertUser("Ulf");
         insertUser("Silent Bob");
         insertUser("Dörte");
         insertUser("Ralle");
@@ -49,7 +49,8 @@ public class MainController{
         befriend("2", "Max");
         befriend("Max", "Niklas2");
         befriend("Silent Bob", "Ralle");
-        befriend("Dörte", "Ralle");*/
+        befriend("Dörte", "Ralle");
+        System.out.println(breiteIterativ("Niklas1", "1"));
         /*insertUser("alex");
         insertUser("yoda");
         insertUser("pia");
@@ -71,7 +72,9 @@ public class MainController{
         String[] arr = getCluster("uwe");
         for(String str : arr){
             System.out.println(str + "\n");
-        }*/
+        }
+
+         /*
         insertUser("s");
         insertUser("a");
         insertUser("c");
@@ -87,6 +90,8 @@ public class MainController{
         befriend("c", "d");
         befriend("c", "z");
         befriend("d", "z");
+
+         */
     }
 
     /**
@@ -420,6 +425,49 @@ public class MainController{
             }
             neighboursTmp.next();
         }
+    }
+    public String breiteIterativ(String name, String endName){
+        Vertex start = allUsers.getVertex(name);
+        Vertex end = allUsers.getVertex(endName);
+        if(start != null && end != null){
+            allUsers.setAllEdgeMarks(false);
+            List<Vertex> help = new List<>();
+            Vertex[][] arrWay =  new Vertex[getAllUsers().length][2];
+            help.append(start);
+            int countPlace = 0;
+            arrWay[countPlace][0] = start;
+            arrWay[countPlace][1] = start;
+            countPlace++;
+            start.setMark(true);
+            help.toFirst();
+            while(help.hasAccess()){
+                List<Vertex> l = allUsers.getNeighbours(help.getContent());
+                l.toFirst();
+                while(l.hasAccess()){
+                    if(l.getContent().isMarked() == false){
+                        help.append(l.getContent());
+                        arrWay[countPlace][0] = l.getContent();
+                        arrWay[countPlace][1] = help.getContent();
+                        countPlace++;
+                        l.getContent().setMark(true);
+                    }
+                    l.next();
+                }
+                help.next();
+            }
+            String out = "";
+            Vertex ac = end;
+            while(ac != start){
+                out += ac.getID();
+                for(int i = 0; i < arrWay.length; i ++){
+                    if(arrWay[i][0] == ac){
+                        ac = arrWay[i][1];
+                    }
+                }
+            }
+            return out;
+        }
+        return "nulllll";
     }
 
 }
